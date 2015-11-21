@@ -1,0 +1,68 @@
+# Version History #
+
+New versions of matlabcontrol are released periodically. The capabilities and reliability of matlabcontrol have improved as the underlying [Java MATLAB Interface](JMI.md) has become better understood.
+
+## Versioning Format ##
+
+Versions use a `α.β.γ` format to indicate information about the release. `α` indicates a major new release which is incompatible with releases with a different `α`. `β` introduces new or improved features while retaining full binary compatibility. For example an application making use of 1.3.2 could upgrade to 1.4.0 without changing their code. `γ` is a bug fix and retains full binary compatibility. For instance an application could upgrade from 1.4.0 to 1.4.1 without changing their code.
+
+### Unsupported Use ###
+Classes which are not documented, such as classes contained in the `matlabcontrol.internal` package may change without notice and changes to them are not considered when ensuring binary compatibility - do not make use of them.
+
+Some interfaces are marked with a warning that the interface is not intended to be implemented by users of matlabcontrol. These interfaces may be added to between versions which will not break consumers of the interface, but would break any implementers of the interfaces. Do not implement these interfaces, changes of this nature to the interfaces are not considered breaking changes.
+
+## Releases ##
+
+### 4.1.0 ###
+Improvements and bug fixes from the 4.0.0 release, includes:
+  * When running inside of MATLAB, it is now possible to call from MATLAB's Event Dispatch Thread (the thread used by Swing and AWT).
+  * `matlabcontrol.extensions.CallbackMatlabProxy` has been deprecated; it previously existed as a workaround for the limitation in being unable to use the proxy on MATLAB's Event Dispatch Thread.
+  * `matlabcontrol.extensions.MatlabProxyLogger` has been deprecated and replaced with `matlabcontrol.LoggingMatlabProxy`. `LoggingMatlabProxy` is a `MatlabProxy` which makes it easy to wrap a `MatlabProxy` instance in a `LoggingMatlabProxy` to aid in debugging.
+  * Fixes a bug preventing arrays with imaginary values from being retrieved using `matlabcontrol.extensions.MatlabNumericArray`.
+  * Fixes a bug where eval could occur not in base workspace.
+  * Threads created by matlabcontrol have more descriptive names.
+  * Improved exception messages.
+  * Various improvements to documentation.
+
+This release is fully backwards compatible with 4.0.0.
+
+### 4.0.0 ###
+
+A major overhaul of matlabcontrol, it includes the following:
+  * Dramatically improved reliability, with a complete rewrite of the MATLAB interaction logic
+  * Transparent unification of control from inside MATLAB and outside MATLAB
+  * Unconditionally thread-safe
+  * Highly configurable MATLAB settings, including running hidden
+  * Ability to reconnect to a previously controlled session
+  * Can disconnect from a MATLAB session without exiting MATLAB
+  * Detailed documentation which includes how types are converted between MATLAB and Java
+  * Numeric array conversion between MATLAB and Java arrays
+  * Non-interference with any other Remote Method Invocation uses in the application (when running outside MATLAB)
+  * Transfer non-JRE classes between MATLAB and the Java application (when running outside MATLAB)
+  * Fixes bugs preventing a Java application from terminating properly (when running outside MATLAB)
+
+For those coming from v3, here are some important changes to note:
+  * There is no longer a distinction between local and remote control class-wise. There are times when the phrases _running inside MATLAB_ and _running outside MATLAB_ are used. _Running inside MATLAB_ refers to what was previously called local control, while _running outside MATLAB_ refers to what was previous called remote control. In all cases,  [MatlabProxy](http://matlabcontrol.googlecode.com/svn/javadocs/doc/matlabcontrol/MatlabProxy.html) is the class which communicates with MATLAB, although in this version there are a number of classes which can wrap around a proxy.
+  * Many of [MatlabProxy](http://matlabcontrol.googlecode.com/svn/javadocs/doc/matlabcontrol/MatlabProxy.html)'s core methods have changed their signatures. `getVariable(...)`, `setVariable(...)`, `eval(...)`, and `exit()` remain the same. `feval(...)` and `returningFeval(...)` now take in their function arguments using varargs which makes it easy to call a MATLAB function with any number of arguments. `returningEval(...)` and `returningFeval(...)` now return `Object[]` with the length of the array equal to the number of arguments to be returned. The overloaded version of `returningFeval(...)` that did not require specifying the number of return arguments has been removed. Additionally, `setEchoEval(...)` has been removed.
+  * A [MatlabProxyFactory](http://matlabcontrol.googlecode.com/svn/javadocs/doc/matlabcontrol/MatlabProxyFactory.html) can still have the location of MATLAB and the proxy creation timeout specified but it is instead done using an instance of [MatlabProxyFactoryOptions](http://matlabcontrol.googlecode.com/svn/javadocs/doc/matlabcontrol/MatlabProxyFactoryOptions.html). The default timeout for getting a proxy is now 180 seconds which is increased from the previous 60 second timeout.
+  * When running inside MATLAB, a [MatlabProxy](http://matlabcontrol.googlecode.com/svn/javadocs/doc/matlabcontrol/MatlabProxy.html) may not be called from the Event Dispatch Thread (EDT) used by AWT and Swing. While previous versions allowed this, it often lead to MATLAB locking up. A proxy may be used indirectly on the EDT by using a [CallbackMatlabProxy](http://matlabcontrol.googlecode.com/svn/javadocs/doc/matlabcontrol/extensions/CallbackMatlabProxy.html).
+  * `MatlabConnectionListener` no longer exists. When requesting a proxy via the factory's [requestProxy(...)](http://matlabcontrol.googlecode.com/svn/javadocs/doc/matlabcontrol/MatlabProxyFactory.html#requestProxy(matlabcontrol.MatlabProxyFactory.RequestCallback)) method you provide a callback. Each proxy instance can have [DisconnectionListener](http://matlabcontrol.googlecode.com/svn/javadocs/doc/matlabcontrol/MatlabProxy.DisconnectionListener.html)s added.
+  * Requesting a proxy via [requestProxy(...)](http://matlabcontrol.googlecode.com/svn/javadocs/doc/matlabcontrol/MatlabProxyFactory.html#requestProxy(matlabcontrol.MatlabProxyFactory.RequestCallback)) now returns a [Request](http://matlabcontrol.googlecode.com/svn/javadocs/doc/matlabcontrol/MatlabProxyFactory.Request.html) object instead of the proxy's identifier. The identifier can be retrieved from the request. A proxy's identifier is no longer a `String`, it is now an [Identifier](http://matlabcontrol.googlecode.com/svn/javadocs/doc/matlabcontrol/MatlabProxy.Identifier.html).
+  * There is nothing like the deprecated `RemoteMatlabProxyController`.
+
+
+
+### 3.1.0 ###
+Improves reliability and documentation. Fixes issue with incorrectly determining matlabcontrol's location when loaded by custom class loaders.
+
+### 3.0.1 ###
+Fixes issues with Windows paths being determined incorrectly.
+
+### 3.0.0 ###
+Introduces ability to control MATLAB from inside MATLAB. Package renamed from `matlab` to `matlabcontrol`. Adds Windows compatibility.
+
+### 2.0.0 ###
+First public release. Added improved documentation. Interaction with MATLAB now essentially a refactored version of Kamin Whitehouse's MatlabControl.
+
+### 1.0.0 ###
+The initial proof of concept. This version was never publicly released. It was essentially a thin Remote Method Invocation (RMI) wrapper around [Kamin Whitehouse's MatlabControl class](http://www.cs.virginia.edu/~whitehouse/matlab/JavaMatlab.html).

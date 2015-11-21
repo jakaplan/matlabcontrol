@@ -1,0 +1,41 @@
+# Frequently Asked Questions #
+
+Below are questions that I have frequently been asked via email or as comments to this page. If you have a question not answered here, please either email me or comment on this page.
+
+**I'm trying to do {your project here}, is matlabcontrol what I am looking for?**
+
+Maybe. You should check out ApproachesToControl to see lots of related projects. matlabcontrol was originally created to allow for programmatic control of the MATLAB application; however, it can also be used for doing computation in MATLAB and retrieving the results in Java. If doing computation in MATLAB is your primary goal then you should consider the officially supported [MATLAB Builder JA](http://www.mathworks.com/products/javabuilder/) created by The MathWorks.
+
+**The methods that call into MATLAB have a return type of `Object` or `Object[]`, what are they actually returning?**
+
+They can return anything, it depends on how you are using the methods. The [javadocs for MatlabProxy](http://matlabcontrol.googlecode.com/svn/javadocs/doc/matlabcontrol/MatlabProxy.html) detail how MATLAB types are converted to Java types. Additionally, you may make use of [MatlabProxyLogger](http://matlabcontrol.googlecode.com/svn/javadocs/doc/matlabcontrol/extensions/MatlabProxyLogger.html) to see a detailed breakdown of what is being returned from MATLAB, including what is inside of arrays.
+
+**Is the source code for the demo available?**
+
+Yes. The source code can be viewed or checked out by using the [Source tab](http://code.google.com/p/matlabcontrol/source/checkout). The demo is not intended to be an example of how to use matlabcontrol, but instead an interactive demonstration of its capabilities. See the [walkthrough](Walkthrough.md) for examples.
+
+**When running outside MATLAB can I have it control an already running session of MATLAB?**
+
+Yes, if the session was previously launched by matlabcontrol and is not currently being controlled by any other external Java applications. The feature is off by default, it can be enabled by use of the [MatlabProxyFactoryOptions](http://matlabcontrol.googlecode.com/svn/javadocs/doc/matlabcontrol/MatlabProxyFactoryOptions.html).
+
+**Is matlabcontrol thread-safe?**
+
+Yes, it is almost entirely unconditionally thread-safe. However, MATLAB itself is single-threaded so if you are performing concurrent calls on a  [MatlabProxy](http://matlabcontrol.googlecode.com/svn/javadocs/doc/matlabcontrol/MatlabProxy.html) expect a lot of blocking. The one exception to thread-safety in matlabcontrol is when inside of a [MatlabThreadCallable](http://matlabcontrol.googlecode.com/svn/javadocs/doc/matlabcontrol/MatlabProxy.MatlabThreadProxy.html) passed to `MatlabProxy`'s [invokeAndWait(...)](http://matlabcontrol.googlecode.com/svn/javadocs/doc/matlabcontrol/MatlabProxy.html#invokeAndWait(matlabcontrol.MatlabProxy.MatlabThreadCallable)) method. See the linked documentation for details.
+
+**Does matlabcontrol have any dependencies?**
+
+Short answer: No. When developing with matlabcontrol you do not need to add any additional dependencies.
+
+Long answer: Yes. matlabcontrol makes use of the [Java MATLAB Interface](JMI.md) (JMI) to communicate with MATLAB. However, the classes used in JMI are only loaded when executing inside of MATLAB's Java Virtual Machine. MATLAB is configured to have the JMI jar on its classpath, so no additional dependency configuration is necessary.
+
+**Does matlabcontrol implement the [Java Scripting API](http://download.oracle.com/javase/6/docs/technotes/guides/scripting/programmer_guide/index.html) (JSR223)?**
+
+No, it does not. There are currently no plans to add support for it. However, if enough interest is shown, support might be added. If anyone is particularly interested in adding support and has experience creating implementations of the Java Scripting API, feel free to get in contact.
+
+**Can the Java program and MATLAB be on separate computers on the same network?**
+
+No, and there are no plans to add this functionality. However, the code is open source so feel free to modify it to do so. Be aware that matlabcontrol is specifically designed to operate using localhost-only sockets.
+
+**Why was matlabcontrol created?**
+
+It was created to allow for a grading program written in Java used by teaching assistants to programmatically control MATLAB in order to open, run, test, and close students' MATLAB code assignments. matlabcontrol now has functionality that far exceeds the needs of the grading program.

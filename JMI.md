@@ -1,0 +1,40 @@
+# Introduction #
+
+The code available on this website relies upon the Java MATLAB Interface (JMI). This interface is entirely undocumented and not publicly acknowledged by The Mathworks.
+
+# History #
+JMI has been included with each version of MATLAB since MATLAB 5.3 `(R11)` when Java was first integrated into MATLAB.
+
+The oldest public [reference](http://www.mathforum.com/kb/message.jspa?messageID=851527&tstart=0) to JMI comes from Aguido Horatio Davis of Griffith University. On September 17, 2000 he posted about discovering JMI and testing some of its functionality. In February of 2002 Peter Webb of The Mathworks (makers of MATLAB) published an article entitled "Integrating Java Components into MATLAB" in the News and Notes section of The Mathworks' Newsletters. Additionally, he posted the ImageBrowser code discussed in his article on the website.
+
+The article has since been removed for the website, the [page](http://www.mathworks.com/company/newsletters/news_notes/win02/patterns.html) is now a dead link. However, a copy of the article is [available on zfhit's blog](http://bbs.matwav.com/viewthread.php?tid=71482). The [page with the code](http://www.mathworks.com/nnimagebrowser) states that "The file you are trying to view is not in a published state." There are no known existing public mirrors of this example code. The Mathworks has never since posted any information regarding JMI, although a [few posts](http://www.mathworks.com/matlabcentral/newsreader/search_results?dur=all&page=1&search_string=tag%3Ajmi) relating to JMI are available on MATLAB Central which is part of The Mathworks website.
+
+# The Interface #
+
+The interface comes in the form of a jar file called jmi.jar distributed with MATLAB. It is found at `matlabroot`/java/jar/jmi.jar where `matlabroot` is the location of your MATLAB installation (on Windows it is located at `matlabroot`\java\jar\jmi.jar). For instance, on OS X with MATLAB `R2009b` it is located at /Applications/MATLAB\_R2009b.app/java/jar/jmi.jar. What this jar contains depends exactly on what version of MATLAB is installed. All of the code in it has the root package `com.mathworks.jmi`, and there are a number of subpackages. Subsequent releases of MATLAB have seen additions to jmi.jar
+
+# matlabcontrol's Use of JMI #
+
+matlabcontrol makes use of only two classes, and a total of just three methods.
+
+`com.mathworks.jmi.NativeMatlab` is used to determine if the code is currently executing on MATLAB's main thread:
+
+```
+public static boolean nativeIsMatlabThread()
+```
+
+`com.mathworks.jmi.Matlab` enables Java to communicate with MATLAB. All communication is done with:
+
+```
+public static Object mtFevalConsoleOutput(String, Object[], int) throws Exception
+```
+
+If the incoming request to interact with MATLAB is not executing on MATLAB's main thread, then it can be placed on the thread by use of:
+
+```
+public static void whenMatlabIdle(Runnable)
+```
+
+# Exploring JMI #
+
+The methods and fields of the `Matlab` class can easily be viewed by using MATLAB. To list all of the method names of the class in MATLAB's Command Window type `methods com.mathworks.jmi.Matlab`. This will list all of the method names, but it won't provide any other important information. To see more detailed information, instead type `methodsview com.mathworks.jmi.Matlab`. To see the fields (also known as member or instance variables) type `fieldnames(com.mathworks.jmi.Matlab)`.

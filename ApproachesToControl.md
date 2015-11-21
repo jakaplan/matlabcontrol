@@ -1,0 +1,73 @@
+# Introduction #
+
+There are a variety of approaches to MATLAB control with Java. At a high level they fall into several categories:
+  1. Controlling the MATLAB GUI from Java
+  1. Controlling the MATLAB engine from Java
+  1. Controlling multiple sessions of MATLAB from MATLAB using Java
+  1. Running or modifying MATLAB code without MATLAB
+
+If you know of, or are working on, a solution not listed here please leave a comment and I will update this page.
+
+# Approach 1: Controlling the MATLAB application #
+
+This approach is for those that want to control a MATLAB session (or multiple sessions) that can also be used by a user. All of the solutions in this approach rely on the [Java MATLAB Interface (JMI)](http://code.google.com/p/matlabcontrol/wiki/JMI).
+
+  * matlabcontrol was created to control either a MATLAB session from within it, or one or more sessions of the MATLAB from a Java program not launched from within MATLAB. Those launched from Java are done without any need for user interaction: the user does not need to change MATLAB configurations, launch MATLAB, or type any special commands into MATLAB so that it can be controlled.
+
+  * This project is inspired by code from Kamin Whitehouse from the University of Virginia. His code allows for controlling MATLAB from Java, but the Java program must be launched from MATLAB. For more details see his [webpage](http://www.cs.virginia.edu/~whitehouse/matlab/JavaMatlab.html) explaining his solution.
+
+  * Inhee Oh of Syndey has a [page](http://home.pusan.ac.kr/~oneman93/my_java/calling_matlab.htm) describing his uses of Kamin's code.
+
+  * Bowen Hui from the University of Toronto [wrote code](http://www.cs.utoronto.ca/~bowen/code/code.html#matjav) that uses Kamin Whitehouse's code to allow for controlling MATLAB from Java. Like the code on this website, his code can control MATLAB from a Java program that is not launched from within MATLAB. However, his code requires configuration on the part of the user, and it writes the results to a text file as opposed to returning those results as Java objects.
+
+  * Maksim Khadkevich created [JAMAL (JAva MAtlab Linking)](http://jamal.sourceforge.net/) can control a MATLAB from an external Java application. However, unlike matlabcontrol additional [setup](http://jamal.sourceforge.net/documentation.shtml) is required.
+
+  * Simon Caton from Cardiff University has a [walk through](http://beryl.cs.cf.ac.uk/Web/Guides/Java%20Control%20of%20Matlab/1.php) on controlling MATLAB and the results it returns.
+
+  * Debprakash Patnaik from Virginia Tech wrote a [blog post](http://debprakash.blogspot.com/2007/01/java-matlab-connection-11-jan-2007-see.html) and some [simple example code](http://debprakash.googlepages.com/MatlabInterface.zip) on how to call MATLAB from Java from inside of MATLAB. The code is much less sophisticated than the above solutions.
+
+  * Aguido Horatio Davis from Griffith University wrote a [paper](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.133.1715&rep=rep1&type=pdf) where he describes a framework for controlling MATLAB from Java. Extensive code is provided in the paper beginning on page 117, although many previous pages describe the approach.
+
+  * David Allen from the Virginia Polytechnic Institute addresses controlling MATLAB from Java in his [thesis](http://institutes.lanl.gov/ei/pdf_files/dallenThesis1.pdf). His description on the process is on page 32, which is actually page 38 of the PDF.
+
+# Approach 2: Controlling the MATLAB engine #
+
+This approach is to use MATLAB purely for computation. It does not allow for user interaction with MATLAB.
+
+  * [JMatLink](http://jmatlink.sourceforge.net/) is a library that allows for controlling the MATLAB engine from Java. If you are using it with the latest version of MATLAB you may run into issues, see this [discussion thread](http://www.mathworks.com/matlabcentral/newsreader/view_thread/263275) for more information and a solution. Ying Bai wrote a book that discusses using JMatLink, it can be [previewed](http://books.google.com/books?id=l0wG3sV6UGkC&pg=PA266) on Google Books. The relevant portion goes from the bottom of page 266 through page 286.
+
+  * Andreas Klimke from the University of Stuttgart has two different approaches to controlling the MATLAB engine. There is a [paper](http://preprints.ians.uni-stuttgart.de/downloads/2003/2003-005.pdf) detailing the approaches. The source code for these approaches can be downloaded [here](http://matlabdb.mathematik.uni-stuttgart.de/download.jsp?Search=Java&SearchCategory=All&MP_ID=163).
+
+  * Markus Krätzig created [JMatlab/Link](http://www.jstatcom.com/jmatlab.html) which works as part of [JStatCom](http://www.jstatcom.com/). His tutorial notes that it only works on Windows.
+
+  * Pete Cappello & Andy Pippin from University of California, Santa Barbara created a [package](http://www.cs.ucsb.edu/projects/jicos/javadoc/edu/ucsb/cs/jicos/services/external/services/matlab/package-summary.html) that allows for MATLAB control from their framework called [JICOS](http://www.cs.ucsb.edu/projects/jicos/), a Java-centric network computing service.
+
+  * Ma Li, Jiang Zhihong, Li Hao, & Wu Dan from Nanjing University wrote a [paper](http://doi.ieeecomputersociety.org/10.1109/IFITA.2009.494) entitled "The Combination of JAVA with MATLAB Apply to Meteorology" where they discuss an approach using Java Native Interface calls to MATLAB's C++ API. The paper is written in rather broken English. (Access to the paper is restricted by IEEE Xplore membership or the article can be purchased.)
+
+  * Erlangung der Würde from the Technischen Universität Carolo‐Wilhelmina zu Braunschweig describes another [solution](http://rzbl04.biblio.etc.tu-bs.de:8080/docportal/servlets/MCRFileNodeServlet/DocPortal_derivate_00005520/MeMo.pdf;jsessionid=68EFECE2491240789B79447B2803F3DE). The relevant pages appear to be 91 and 92, but the entire document is in German, so I'm less than certain.
+
+  * [Ptolemy II](http://ptolemy.berkeley.edu/ptolemyII/ptIIfaq.htm#simulink) contains the ability to interact with the MATLAB engine. Zoltan Kemenczy at Research In Motion added this [functionality](http://ptolemy.eecs.berkeley.edu/ptolemyII/ptIIlatest/ptII/ptolemy/matlab/matlab.htm). Documentation can be found [here](http://ptolemy.eecs.berkeley.edu/ptolemyII/ptII8.0/ptII/doc/codeDoc/ptolemy/matlab/package-summary.html).
+
+  * A commercial approach is to use [JIntegra](http://j-integra.intrinsyc.com/). They have a [web page](http://j-integra.intrinsyc.com/support/com/doc/other_examples/Matlab.htm) on how to use their product with MATLAB.
+
+  * Another, now defunct, commercial approach is called MatlabServerAgent. Their website no longer exists, but it can be found [here](http://web.archive.org/web/20040318183559/http://www.matlabserveragent.com) on the Internet Archive.
+
+# Approach 3: Controlling multiple sessions of MATLAB from MATLAB #
+
+This approach is very different from the above two. It uses Java to link together multiple sessions of MATLAB using Java.
+
+  * Gabor Cselle from the Swiss Federal Institute of Technology has [a tutorial and source code](http://www.gaborcselle.com/mdct/) on his approach to distributed computing on MATLAB using Java.
+
+  * Scott Gorlin from the Massachusetts Insitute of Technology has [another approach](http://www.scottgorlin.com/2007/07/matlabdispatch/) to control multiple sessions of MATLAB using Java. A partial [walk through](http://www.scottgorlin.com/wp-content/uploads/2008/01/day6.pdf) of his code and how to use it is also available. His code also makes use of Kamin Whitehouse's code. The code can be found [here](http://git.scottgorlin.com/?p=MatlabDispatch.git).
+
+  * Max Goldman and Da Guo from the Massachusetts Institute of Technology created [Java MPI in MATLAB\*P](http://beowulf.csail.mit.edu/18.337-2003/projects/web.mit.edu/maxg/www/18.337/) which allows for parallel computing using MATLAB.
+
+  * Brad Phelan created a solution called "Matlab 2 Matlab : Distributed Computing Toolbox". His website is currently not functional, but at least for the moment Google has a [cache of the relevant web page](http://google.com/search?q=cache:WzmuqKbc9R8J:xtargets.com/cms/Tutorials/Matlab-Programming/Matlab-2-Matlab-Distributed-Computing-Toolbox.html).
+
+# Approach 4: Running or modifying MATLAB code without MATLAB #
+
+This approach does not actually involve MATLAB and so is not really MATLAB control at all. Nonetheless it involves MATLAB code and Java so its worth mentioning here.
+
+  * [MATLAB Builder JA](http://www.mathworks.com/products/javabuilder/) is a product offered by The MathWorks which allows for compiling MATLAB code in such a way that a Java wrapper is created allowing for easy code interaction. Instead of interacting with the MATLAB engine it instead makes use of the MATLAB Compiler (MCR).
+
+  * Wojciech Gradkowski created [JMatIO](http://www.mathworks.com/matlabcentral/fileexchange/10759) which is a pure Java library for reading and writing to the Matlab 5 MAT-file format.

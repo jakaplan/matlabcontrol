@@ -1,0 +1,45 @@
+# Known Compatibility #
+matlabcontrol v4 runs both inside MATLAB and outside MATLAB. If matlabcontrol runs properly outside MATLAB for a given configuration it will also work inside MATLAB; the reverse may not be true. Compatibility in this chart is reported by using the demo and confirming a connection to MATLAB can be established.
+
+You can contribute to this chart by leaving a comment on this page. Please test by using the demo and specifying if you ran the demo outside MATLAB, inside MATLAB, or both, your operating system (please be specific - particularly if running on Linux), and your version of MATLAB.
+
+**Inside MATLAB:**
+
+|                       | `R2012b` | `R2012a` | `R2011b` | `R2011a` | `R2010b` |`R2010a`|`R2009b`|`R2009a`|`R2008b`|`R2008a`|`R2007b`|
+|:----------------------|:---------|:---------|:---------|:---------|:---------|:-------|:-------|:-------|:-------|:-------|:-------|
+| OS X 10.5             | N/A           | N/A          | N/A          | N/A          | Yes            | ?             | Yes         | No<sup>†</sup>     | No<sup>†</sup>    | No<sup>†</sup>     | No<sup>†</sup>     |
+| OS X 10.6             | ?               | ?               | Yes           | Yes           | Yes           | Yes          | ?              | ?             | ?             | ?             | ?               |
+| OS X 10.7             | ?               | ?               | ?               | Yes            | ?               | ?              | ?              | ?             | ?             | ?             | ?               |
+| OS X 10.8             | ?               | ?               | ?               | ?               | ?               | ?              | ?              | ?             | ?             | ?             | ?                |
+| Windows XP            | ?               | ?               | Yes           | Yes           | Yes           | Yes          | ?              | ?             | ?             | Yes         | Yes            |
+| Windows Vista         | ?               | ?               | ?               | ?               | Yes           | ?              | ?              | ?             | ?             | ?             | ?               |
+| Windows 7             | Yes           | Yes           | Yes           | Yes           | Yes           | Yes          | Yes          | ?             | ?             | Yes         | Yes          |
+| Windows 8             | Yes           | ?               | ?               | ?               | ?               | ?              | ?              | ?             | ?             | ?             | ?                |
+
+**Outside MATLAB:**
+
+|                       | `R2012b` | `R2012a` | `R2011b` | `R2011a` | `R2010b` |`R2010a`|`R2009b`|`R2009a`|`R2008b`|`R2008a`|`R2007b`|
+|:----------------------|:---------|:---------|:---------|:---------|:---------|:-------|:-------|:-------|:-------|:-------|:-------|
+| OS X 10.5             | N/A           | N/A          | N/A           | N/A          | Yes            | ?             | Yes         | No<sup>†</sup>     | No<sup>†</sup>    | No<sup>†</sup>     | No<sup>†</sup>     |
+| OS X 10.6             | ?               | ?               | Yes            | Yes           | Yes           | Yes          | ?              | ?             | ?             | ?             | ?               |
+| OS X 10.7             | ?               | ?               | ?                | Yes           | ?               | ?              | ?              | ?             | ?             | ?             | ?               |
+| OS X 10.8             | ?               | ?               | ?               | ?               | ?               | ?              | ?              | ?             | ?             | ?             | ?                |
+| Windows XP            | ?               | ?               | Yes            | Yes           | Yes           | Yes          | ?              | ?             | ?             | Yes         | Yes           |
+| Windows Vista         | ?               | ?               | ?                | ?               | Yes           | ?              | ?              | ?             | ?             | ?             | ?               |
+| Windows 7             | Yes           | Yes           | Yes            | Yes          | Yes          | Yes            | Yes          | ?             | ?             | Yes         | Yes          |
+| Windows 8             | Yes           | ?               | ?               | ?               | ?               | ?              | ?              | ?             | ?             | ?             | ?                |
+
+_Versions of MATLAB prior to `R2007b` [do not make use of Java 6](http://www.mathworks.com/support/solutions/en/data/1-1812J/) and are therefore incompatible with matlabcontrol._
+
+**?** No reports. If you have this configuration please leave a comment with the relevant data and the table will be updated.
+
+**<sup>†</sup>** matlabcontrol requires Java 6. OS X versions of MATLAB R2009a and earlier are [32-bit only](http://www.mathworks.com/support/sysreq/release2009a/macintosh.html). Apple only released 64-bit Java 6 for OS X 10.5. There are unofficial ways to run 32-bit Java 6 on OS X 10.5.
+
+Due to the large diversity of Linux distributions, Linux is not included in the above chart. However, the following configurations have been reported to work:
+  * Debian 6 & `R2008b`
+  * Debian 6 & `R2010a`
+  * Debian 6 & `R2010b`
+  * Ubuntu 10.04 & `R2010b`
+  * Ubuntu 11.04 & `R2011b`
+
+If when matlabcontrol launches MATLAB, MATLAB displays the error <font color='red'><code>??? Undefined variable "matlabcontrol" or class "matlabcontrol.MatlabConnector.connectFromMatlab"</code></font> this is most likely because your version of MATLAB is using a Java Virtual Machine (JVM) that is too old to be compatible with matlabcontrol. matlabcontrol v4 makes use of Java 6, which is Java Class Version 50. To check which Java Class Version your MATLAB JVM supports, in MATLAB enter `java.lang.System.getProperty('java.class.version')`. If it is less than 50, matlabcontrol is not compatible with your version of MATLAB.
