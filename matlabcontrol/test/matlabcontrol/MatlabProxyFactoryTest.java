@@ -1,8 +1,6 @@
 package matlabcontrol;
 
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.atomic.AtomicReference;
-import junit.framework.Assert;
 import org.junit.Test;
 
 /*
@@ -36,7 +34,7 @@ public class MatlabProxyFactoryTest
     @Test
     public void createFactory()
     {
-        MatlabProxyFactory factory = new MatlabProxyFactory();
+        new MatlabProxyFactory();
     }
     
     @Test

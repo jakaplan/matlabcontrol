@@ -32,7 +32,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 class ClassInfo
 {
-    private static ConcurrentMap<Class, ClassInfo> CACHE = new ConcurrentHashMap<Class, ClassInfo>();
+    private static final ConcurrentMap<Class, ClassInfo> CACHE = new ConcurrentHashMap<Class, ClassInfo>();
 
     static ClassInfo getInfo(Class<?> clazz)
     {

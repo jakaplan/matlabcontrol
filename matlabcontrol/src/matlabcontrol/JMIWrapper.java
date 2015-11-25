@@ -46,14 +46,11 @@ import matlabcontrol.MatlabProxy.MatlabThreadProxy;
  * This class runs inside of MATLAB's Java Virtual Machine and relies upon the Java MATLAB Interface which is
  * distributed by MathWorks as {@code jmi.jar}. It allows for Java to send {@code eval} and {@code feval} statements to
  * MATLAB and receive results. {@code jmi.jar} is <b>not</b> distributed with matlabcontrol as it is the property of
- * MathWorks. If you wish to compile the source code you will need to reference the version of {@code jmi.jar} that is
- * distributed with your copy of MATLAB. It is located at {@code matlabroot/java/jar/jmi.jar} where {@code matlabroot}
- * is the location of your MATLAB installation. The location of {@code matlabroot} can be determined by executing the
- * {@code matlabroot} command in the MATLAB Command Window.
+ * MathWorks. For compilation purposes, the jmistub subproject exists. It contains the classes and stubbed out versions
+ * of the methods used by {@link JMIWrapper} so that compilation will succeed.
  * <br><br>
- * This is the only class in matlabcontrol which directly links against code in {@code jmi.jar}. (And therefore also the
- * only class that needs {@code jmi.jar} to be on the classpath in order to compile.) {@link Configuration} also uses
- * code in {@code jmi.jar} but uses reflection to interact with it.
+ * This is the only class in matlabcontrol which directly links against code in {@code jmi.jar}. {@link Configuration}
+ * also uses code in {@code jmi.jar} but uses reflection to interact with it.
  *
  * @since 3.0.0
  * 

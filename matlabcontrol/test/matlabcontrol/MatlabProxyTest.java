@@ -29,6 +29,7 @@ import org.junit.Test;
  */
 
 /**
+ * Very basic tests for {@link MatlabProxy}.
  *
  * @author <a href="mailto:nonother@gmail.com">Joshua Kaplan</a>
  */
@@ -78,5 +79,27 @@ public class MatlabProxyTest
     public void testEval() throws MatlabInvocationException
     {
         _proxy.eval("disp('Hello World')");
+    }
+    
+    @Test
+    public void testReturningEval() throws MatlabInvocationException
+    {
+        double[] a = new double[]{ 5, 7, 9 };
+        _proxy.setVariable("a", a);
+        
+        Object[] result = _proxy.returningEval("a(2)", 1);
+        assertNotNull(result);
+        
+        double[] innerResultArray = (double[]) result[0];
+        assertEquals(1, innerResultArray.length);
+        
+        double innerResult = innerResultArray[0];
+        assertEquals(a[1], innerResult);
+    }
+    
+    @Test
+    public void testFeval() throws MatlabInvocationException
+    {
+        _proxy.feval("disp", "Hello World");
     }
 }
