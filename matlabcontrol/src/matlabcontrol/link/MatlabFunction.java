@@ -49,7 +49,7 @@ public @interface MatlabFunction
      * <li><b>Relative path to an m-file</b><br/>
      *     The value will be treated as the location of an m-file relative to the root directory of the interface which
      *     declared the method being annotated. For example if the interface is {@code com.example.MyInterface} located
-     *     at {@code /projects/code/numera/com/example/MyInterface.java} then path will be resolved relative to
+     *     at {@code /projects/code/numera/com/example/MyInterface.class} then path will be resolved relative to
      *     {@code /projects/code/numera/}. This path can be resolved properly when both the interface and m-file are
      *     inside of a zip file such as a jar or war file. The file's existence will be confirmed.</li>
      * </ol>

@@ -36,8 +36,8 @@ public final class MatlabReturns
     
     /**
      * Hidden super class of all of the {@code Return}X classes. This class is hidden because it is not a valid return
-     * type from a method declared in an interface provided to {@link MatlabFunctionLinker} and there is no need for a
-     * user to make use of this class.
+     * type from a method declared in an interface provided to {@link Linker} and there is no need for a user to make
+     * use of this class.
      */
     static class ReturnN
     {

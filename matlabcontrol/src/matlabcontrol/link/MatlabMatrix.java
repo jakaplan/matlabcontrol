@@ -23,7 +23,18 @@ package matlabcontrol.link;
  */
 
 /**
- * The base class for all MATLAB matrices.
+ * The base class for all MATLAB multidimensional arrays.
+ * 
+ * Draft notes:
+ * This will become the new base class for all MATLAB matrices and multidimensional arrays.
+ * 
+ * Details on multidimensional arrays in MATLAB are described here:
+ * http://www.mathworks.com/help/matlab/math/multidimensional-arrays.html
+ * 
+ * Naming-wise MathWorks uses "matrix" for two dimensions and "array" for 3 or more dimensions. That poses a bit of
+ * a complication in terms of what to name things in Java when a data structure can easily exist for n-dimensions. A
+ * further wrinkle is that MATLAB only supports sparse structures of exactly two dimensions, so they're always called
+ * matrices.
  *
  * @since 4.2.0
  * @author <a href="mailto:nonother@gmail.com">Joshua Kaplan</a>

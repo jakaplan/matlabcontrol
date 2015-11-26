@@ -30,7 +30,7 @@ import matlabcontrol.MatlabOperations;
 /**
  * Superclass of all Java classes which represent MATLAB types.
  * <br><br>
- * Subclasses of this either final or abstract and non-extenable with final subclasses of their own. Being final makes
+ * Subclasses of this either final or abstract and non-extendable with final subclasses of their own. Being final makes
  * it easier to ensure appropriate behavior when transforming types automatically. Subclasses are not
  * {@link Serializable} to reduce the publicly exposed API and reduce the need to maintain serializable compatibility.
  * Instead, transferring occurs by use of {@link MatlabTypeSetter} and {@link MatlabTypeGetter}. A getter is typically
@@ -59,6 +59,10 @@ abstract class MatlabType
          * Takes the information retrieved by the
          * {@link #getInMatlab(matlabcontrol.MatlabOperations, java.lang.String)} and creates the
          * associated {@code MatlabType}.
+         * <br><br>
+         * When matlabcontrol is controlling a remote MATLAB instance, this method is called outside of MATLAB. The
+         * information it is using to create the associated {@code MatlabType} has first been serialized, sent over RMI,
+         * and then deserialized in the JVM running outside of MATLAB.
          * 
          * @return 
          */
@@ -67,6 +71,8 @@ abstract class MatlabType
         /**
          * Retrieves the data it needs from the variable in MATLAB. So that after retrieving this information
          * {@link #retrieve()} can be called to create the appropriate {@code MatlabType}.
+         * <br><br>
+         * This method is always called inside of MATLAB.
          * 
          * @param ops
          * @param variableName 

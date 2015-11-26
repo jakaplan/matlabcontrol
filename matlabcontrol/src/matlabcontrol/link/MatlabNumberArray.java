@@ -47,7 +47,7 @@ import matlabcontrol.link.ArrayMultidimensionalizer.PrimitiveArrayGetter;
  * type, including arrays. (Java's array implementation is known as an Iliffe vector.) A two dimensional array of
  * {@code double}s, {@code double[][]}, is just an array of {@code double[]}. A result of this is that each
  * {@code double[]} can have a different length. When not all inner arrays for a given dimension have the same length,
- * then the array is known as as a jagged array (also known as a ragged array).
+ * then the array is known as a jagged array (also known as a ragged array).
  * <br><br>
  * MATLAB arrays are always two or more dimensions; single dimension Java arrays will become MATLAB arrays of length 1
  * by <i>n</i> where <i>n</i> is the length of the Java array.

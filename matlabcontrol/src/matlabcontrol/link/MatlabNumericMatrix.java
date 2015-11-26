@@ -88,7 +88,7 @@ abstract class MatlabNumericMatrix<L, T> extends MatlabMatrix<L, T>
      * @param pages
      * @return element at {@code row}, {@code column}, and {@code pages}
      * @throws IllegalArgumentException if number of indices does not equal this array's number of dimensions
-     * @throws ArrayIndexOutOfBoundsException if the indices are out of bound
+     * @throws ArrayIndexOutOfBoundsException if the indices are out of bounds
      */
     public abstract MatlabNumber<?> getElementAtIndices(int row, int column, int... pages);
 }

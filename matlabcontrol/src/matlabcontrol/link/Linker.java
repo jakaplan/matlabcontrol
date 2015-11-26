@@ -221,15 +221,16 @@ public class Linker
         
         private Object invokeMatlabOperationsMethod(Method method, Object[] args) throws MatlabInvocationException
         {
-            Class<?> methodReturn = method.getReturnType();
             Object result;
             
+            //public void eval(String command) throws MatlabInvocationException
             if(method.getName().equals("eval"))
             {
                 InvocationInfo info = new InvocationInfo("eval", null, new Class<?>[0], new Class<?>[0][0]);
                 
-                result = invokeMatlabFunction(info, false, args, methodReturn);
+                result = invokeMatlabFunction(info, false, args);
             }
+            //public Object[] returningEval(String command, int nargout) throws MatlabInvocationException
             else if(method.getName().equals("returningEval"))
             {   
                 //Each return type
@@ -239,8 +240,9 @@ public class Linker
                 
                 InvocationInfo info = new InvocationInfo("eval", null, returnTypes, new Class<?>[nargout][0]);
                 
-                result = invokeMatlabFunction(info, false, new Object[]{ args[0] }, methodReturn);
+                result = invokeMatlabFunction(info, false, new Object[]{ args[0] });
             }
+            //public void feval(String functionName, Object... args) throws MatlabInvocationException
             else if(method.getName().equals("feval"))
             {
                 //Make function arguments at the same level as the function name
@@ -251,8 +253,9 @@ public class Linker
                 
                 InvocationInfo info = new InvocationInfo("feval", null, new Class<?>[0], new Class<?>[0][0]);
                 
-                result = invokeMatlabFunction(info, false, firstLevelArgs, methodReturn);
+                result = invokeMatlabFunction(info, false, firstLevelArgs);
             }
+            //public Object[] returningFeval(String functionName, int nargout, Object... args) throws MatlabInvocationException
             else if(method.getName().equals("returningFeval"))
             {
                 //Make function arguments at same level as function name
@@ -268,19 +271,21 @@ public class Linker
                 
                 InvocationInfo info = new InvocationInfo("feval", null, returnTypes, new Class<?>[nargout][0]);
                 
-                result = invokeMatlabFunction(info, false, firstLevelArgs, methodReturn);
+                result = invokeMatlabFunction(info, false, firstLevelArgs);
             }
-            else if(method.getName().equals("getVariable"))
-            {
-                InvocationInfo info = new InvocationInfo("eval", null, new Class<?>[]{ Object.class }, new Class<?>[1][0]);
-                
-                result = ((Object[]) invokeMatlabFunction(info, false, args, methodReturn))[0];
-            }
+            //public void setVariable(String variableName, Object value) throws MatlabInvocationException
             else if(method.getName().equals("setVariable"))
             {
                 InvocationInfo info = new InvocationInfo("assignin", null, new Class<?>[0], new Class<?>[0][0]);
                 
-                result = invokeMatlabFunction(info, false, new Object[]{ "base", args[0], args[1] }, methodReturn);
+                result = invokeMatlabFunction(info, false, new Object[]{ "base", args[0], args[1] });
+            }
+            //public Object getVariable(String variableName) throws MatlabInvocationException
+            else if(method.getName().equals("getVariable"))
+            {
+                InvocationInfo info = new InvocationInfo("eval", null, new Class<?>[]{ Object.class }, new Class<?>[1][0]);
+                
+                result = ((Object[]) invokeMatlabFunction(info, false, args))[0];
             }
             else
             {
@@ -302,8 +307,22 @@ public class Linker
             //If the method uses var args then we need to make those arguments first level
             if(method.isVarArgs() && args.length > 0)
             {   
+                //Var args can only be used in the final argument position
                 Object varArgs = args[args.length - 1];
-                if(varArgs.getClass().isArray())
+                
+                //If null is directly passed in as the one and only argument for the var args portion then this value
+                //will be null, as opposed to an array containing one element which is null. This is because Java
+                //interprets this as null being the value for the actually array that backs the var args.
+                if(varArgs == null)
+                {
+                    //There's no semantically reasonable way to map a null value for the var args portion to a MATLAB
+                    //equivalent, so throw a descriptive exception if this is attempted
+                    throw new IllegalArgumentException("Passing null for the var args portion of " +
+                            method + " is not supported. To call this method without any of the variable " + 
+                            "arguments, omit all of them in the method call.");
+                }
+                //By definition var args should be an array, but confirm
+                else if(varArgs.getClass().isArray())
                 {
                     //Number of variable arguments
                     int varArgLength = Array.getLength(varArgs);
@@ -320,13 +339,18 @@ public class Linker
                     }
                     args = allArgs;
                 }
+                //Unexpected situation
+                else
+                {
+                    throw new UnsupportedOperationException(method + " reports having varargs, but the final " +
+                            "argument position contains neither an array nor null");
+                }
             }
             
-            return invokeMatlabFunction(info, true, args, method.getReturnType());
+            return invokeMatlabFunction(info, true, args);
         }
         
-        private Object invokeMatlabFunction(InvocationInfo info, boolean userDefined, Object[] args,
-                Class<?> methodReturn)
+        private Object invokeMatlabFunction(InvocationInfo info, boolean userDefined, Object[] args)
                 throws MatlabInvocationException
         {
             //Replace all arguments with parameters of a MatlabType subclass or a multidimensional primitive array with
@@ -350,14 +374,15 @@ public class Linker
 
             //Invoke function
             FunctionResult result = _proxy.invokeAndWait(new CustomFunctionInvocation(info, args));
+            
+            //If invoking the function resulted in a RuntimeException being thrown, wrap it and rethrow it
             if(result.thrownException != null)
             {
-                result.thrownException.fillInStackTrace();
-                throw result.thrownException;
+                throw new RuntimeException("Issue occurred invoking " + info.name, result.thrownException);
             }
-            Object[] returnValues = result.returnArgs;
-
+            
             //For each returned value that is a serialized getter, retrieve it
+            Object[] returnValues = result.returnArgs;
             for(int i = 0; i < returnValues.length; i++)
             {
                 if(returnValues[i] instanceof MatlabTypeGetter)
@@ -370,7 +395,7 @@ public class Linker
             Object toReturn;
             if(userDefined)
             {
-                toReturn = processReturnValues(info, returnValues, methodReturn);
+                toReturn = processReturnValues(info, returnValues);
             }
             else
             {
@@ -380,7 +405,7 @@ public class Linker
             return toReturn; 
         }
         
-        private Object processReturnValues(InvocationInfo info, Object[] result, Class<?> methodReturn)
+        private Object processReturnValues(InvocationInfo info, Object[] result)
         {
             Object toReturn;
             //0 return values
@@ -883,7 +908,7 @@ public class Linker
                             {
                                 returnValue = MatlabValueReceiver.receiveValue(ops, variablesToClear, returnName);
                             }
-                            //By default, return a MatlabNumber
+                            //Otherwise, return a MatlabNumber
                             else
                             {
                                 MatlabNumberGetter getter = new MatlabNumberGetter();
@@ -902,7 +927,7 @@ public class Linker
                                 getter.getInMatlab(ops, returnName);
                                 returnValue = getter;
                             }
-                            //By default, return a MatlabNumberArray
+                            //Otherwise, return a MatlabNumberArray
                             else
                             {  
                                 MatlabNumberArrayGetter getter = new MatlabNumberArrayGetter(keepLinear);
